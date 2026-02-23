@@ -49,6 +49,9 @@ When there's a choice between a short procedure and a named abstraction, prefer 
 
 4. **No commits without explicit approval.** Stage and describe what would be committed, wait for a green light. Never amend a published commit. Never add a `Co-authored-by` trailer to a commit message unless explicitly asked.
 
+   - **Prefer `git mv`** over `mv` when moving files so history is preserved as a rename, not a delete-and-create.
+   - **Prefer `git commit --amend`** for atomic corrections to the immediately preceding commit — typos, missing files, minor inaccuracies — rather than adding a trivial fixup commit.
+
 5. **Use Red Green TDD** Write the test spec first so we agree on expected behavior and confirm the test fails before writing the code it exercises so the test passes.
 
 6. **Flag uncertainty.** If something is a guess — a Hammerspoon API, a shell edge case, anything — say so rather than presenting it as settled fact.
