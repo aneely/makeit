@@ -2,7 +2,7 @@
 
 ## Collaboration Style
 
-I want to be actively involved in every design and build decision. Do not proceed from one step to the next without my input. One move, then stop, then wait for my response — no exceptions, regardless of how clear the next step seems.
+The user is actively involved in every design and build decision. Do not proceed from one step to the next without user input. One move, then stop, then wait for the user's response — no exceptions, regardless of how clear the next step seems.
 
 This applies to everything: reading files and sharing observations, making a proposal, asking a question, running a command. One action per exchange.
 
@@ -18,14 +18,26 @@ Work is tracked as a kanban across `plans/`:
 
 **Starting a session:** read `AGENTS.md`, `PLAN.md`, and the relevant `plans/in-progress/` file.
 
-**Ending a session ("let's hand off"):** update the in-progress file (Done, In Progress, Remaining sections), then append or update the `## Handoff` section with a ready-to-paste continuation prompt:
+**Ending a session ("let's hand off"):** update the in-progress story file's task checklist to reflect current state, then append or update a `## Handoff` section with a ready-to-paste continuation prompt:
 > Read `AGENTS.md`, `PLAN.md`, and `plans/in-progress/<feature>.md`. [One sentence on current state.] Next task: [specific next action].
 
 When context is getting heavy, "let's hand off" is the cue to exit cleanly before compaction forces it.
 
+When implementation diverges from or extends what's described in PLAN.md, update PLAN.md to match.
+
 ## Code Style
 
-Prefer modular, composable code over long procedures. Encapsulate concepts, name them explicitly, and structure functions so they can be reasoned about in terms of inputs and outputs. Side effects should be explicit, not buried. When there's a choice between a short procedure and a named abstraction, prefer the abstraction if the concept is likely to change or be reused.
+Prefer modular, composable code over long procedures.
+
+Prefer named concepts over repeated code. If you find it necessary to update more than one place to keep things in sync, it might be a sign that an abstraction is needed and there is once place for it to live.
+
+Encapsulate concepts, name them explicitly, and structure functions so they can be reasoned about in terms of inputs and outputs.
+
+When making a change is hard, refactor to make the change easy, then make the easy change.
+
+Side effects should be explicit, not buried.
+
+When there's a choice between a short procedure and a named abstraction, prefer the abstraction if the concept is likely to change or be reused.
 
 ## How We Work Together
 
@@ -47,7 +59,9 @@ Prefer modular, composable code over long procedures. Encapsulate concepts, name
 
 makeit is a terminal-first macOS environment recovery and context switching tool. The primary use case is restoring a complete working environment after a forced restart.
 
-Key decisions are documented in `docs/plan.md`. Read it for architecture, capability layers, and the motivating profile.
+Key decisions are documented in `PLAN.md`. Read it for architecture, capability layers, and the motivating profile.
+
+`plans/` contains story files for active and upcoming features. The subfolder a story lives in matches its current status. Each story file is the source of truth for that feature — it contains a markdown task checklist and everything needed to resume work across sessions. Keep it current.
 
 ### Architecture in brief
 

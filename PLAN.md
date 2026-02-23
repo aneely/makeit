@@ -45,7 +45,7 @@ Core capabilities (not "later" — these are the point):
 
 The root problem: an ultrawide monitor (5120x1440) loses its native resolution when switching inputs between machines. macOS downgrades to ~3440x1080. The only known fix is a full restart. Restarting destroys a carefully arranged working environment.
 
-popup was born as a recovery tool — a way to restore app and folder state after a forced restart. The broader vision followed naturally: if you can restore one environment reliably, you can define multiple environments and switch between them intentionally. Budget mode. Studio mode. Deep work mode. The restart recovery use case and the context switching use case are the same tool.
+makeit was born as a recovery tool — a way to restore app and folder state after a forced restart. The broader vision followed naturally: if you can restore one environment reliably, you can define multiple environments and switch between them intentionally. Budget mode. Studio mode. Deep work mode. The restart recovery use case and the context switching use case are the same tool.
 
 The minimal bootstrap model: terminal emulator opens via login item. Everything else is driven by a single command from the terminal.
 
@@ -220,7 +220,12 @@ If the Hammerspoon team (or a fork) ever ships a standalone CLI formula, the mig
 │   ├── work_test.lua       # Sample Lua test with hs mock
 │   └── config.Makefile     # Makefile dropped into new config repo
 ├── tests/
+│   ├── bin/
+│   │   └── hs              # Mock hs binary for BATS tests
+│   ├── test_helper/        # Vendored bats-assert, bats-support, bats-file
 │   └── test_makeit.bats    # BATS tests for the shell wrapper
+├── plans/                  # Kanban story files (todo/, in-progress/, completed/)
+├── session-notes/          # Freeform session notes by date
 ├── Makefile
 ├── README.md
 └── .gitignore
@@ -278,7 +283,7 @@ The `bin/makeit` shell script:
 1. Handles built-in commands (`list`, `clear`) first
 2. If the argument ends in `.lua` or looks like a path (contains `/`, starts with `.` or `~`): treat as a file path and run it directly
 3. Otherwise: treat as a profile name, read `$MAKEIT_CONFIG` (fallback `~/.config/makeit/`), resolve to `<config-dir>/<name>.lua`
-4. Runs it: `hs -c "dofile('...')"`
+4. Runs it: `hs -c "dofile([==[...]==])"`  — Lua long-string delimiters avoid quoting issues with paths
 
 This means a config repo is not required to get a first win — write any `.lua` file, run it with `makeit file.lua`.
 
