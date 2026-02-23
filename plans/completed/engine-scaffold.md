@@ -14,7 +14,7 @@ Initial build of the makeit engine repo: shell wrapper, Makefile, scaffold files
 - [x] `tests/bin/hs` — mock hs binary for BATS tests
 - [x] `tests/test_makeit.bats` — BATS tests for bin/makeit
 - [x] git init + initial commits
-- [ ] `Makefile` — install, uninstall, test, init targets
-- [ ] `scaffold/work.lua` — sample profile
-- [ ] `scaffold/work_test.lua` — sample Lua test with hs mock
-- [ ] `scaffold/config.Makefile` — Makefile dropped into new config repos by `make init`
+- [x] `Makefile` — install, uninstall, test, init targets
+- [x] `scaffold/work.lua` — sample profile
+- [x] `scaffold/work_test.lua` — sample Lua test with hs mock
+- [x] `scaffold/config.Makefile` — Makefile dropped into new config repos by `make init`

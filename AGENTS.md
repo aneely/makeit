@@ -55,6 +55,14 @@ When there's a choice between a short procedure and a named abstraction, prefer 
 
 7. **Don't build ahead.** Only implement what's been discussed and agreed. No "while I'm here" additions.
 
+## Key Files
+
+`README.md` is for humans. It should give a new person everything they need to understand the project, adopt it, and navigate the repo structure if they clone it.
+
+`PLAN.md` is for agent sessions. It contains technical context, architecture decisions, and design history that quickly brings a new session up to speed on the nature of the project.
+
+`plans/` contains story files for active and upcoming features. Check off tasks in the story file as they are completed, not at the end. If a session ends unexpectedly, the checklist should reflect what was actually done.
+
 ## Project Context
 
 makeit is a terminal-first macOS environment recovery and context switching tool. The primary use case is restoring a complete working environment after a forced restart.
