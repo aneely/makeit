@@ -12,7 +12,7 @@ on the README to make it friendlier for less technical users.
 
 ## Tasks
 
-- [ ] Tone and clarity pass on all sections
-- [ ] Ensure the motivating use case (restart recovery) lands for a non-developer reader
-- [ ] Review requirements section — any ways to reduce apparent complexity?
-- [ ] Review with fresh eyes: would someone who didn't build this understand it?
+- [x] Tone and clarity pass on all sections
+- [x] Ensure the motivating use case (restart recovery) lands for a non-developer reader
+- [x] Review requirements section — any ways to reduce apparent complexity?
+- [x] Review with fresh eyes: would someone who didn't build this understand it?

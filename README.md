@@ -1,6 +1,7 @@
 # makeit
 
-A terminal-first macOS environment recovery and context switching tool.
+Your Mac gets restarted. Apps are gone, windows are gone, your display resolution is
+wrong. `makeit morning` puts everything back.
 
 ```bash
 makeit morning       # restore full environment from bare restart
@@ -10,12 +11,16 @@ makeit clear         # run clear.lua — quit managed apps
 makeit ./draft.lua   # run any .lua file directly
 ```
 
+Profiles are plain Lua files. You define what a working environment looks like — which
+apps to launch, how windows are arranged, which tmux sessions to spin up — and makeit
+runs it with one command.
+
 ## Requirements
 
 - macOS
-- [Hammerspoon](https://www.hammerspoon.org) installed and running
-- `hs` CLI installed (run `hs.ipc.cliInstall()` in Hammerspoon console once)
-- `lua` — for running profile unit tests (`brew install lua`)
+- [Hammerspoon](https://www.hammerspoon.org) installed and running as a login item
+- `hs` CLI installed: open Hammerspoon → Console, run `hs.ipc.cliInstall()` once
+- `lua` for running profile unit tests (`brew install lua`)
 
 ## Install
 
@@ -24,27 +29,34 @@ git clone https://github.com/aneely/makeit ~/dev/makeit
 make -C ~/dev/makeit install
 ```
 
+This copies `makeit` to `~/.local/bin`. Make sure that's on your `$PATH`.
+
 ## Setup
 
-The recommended approach is a version-controlled config repo at a location of your choice:
+Profiles live in a config repo — a plain git repo you own and control. Pick a location:
 
 ```bash
 make -C ~/dev/makeit init CONFIG_DIR=~/dev/my-profiles
 cd ~/dev/my-profiles && git init && git add . && git commit -m "initial profiles"
 ```
 
-Then add to your `.zshrc`:
+Then tell makeit where to find it — add to your `.zshrc`:
 
 ```bash
 export MAKEIT_CONFIG=~/dev/my-profiles
 ```
 
-This keeps your profiles in git, portable across machines, and separate from the engine.
+Your config repo travels with you. Clone it on a new machine, set the env var, and
+you're back to your full environment in one command.
 
-**Quick start (no env var):** `make -C ~/dev/makeit init` scaffolds into `~/.config/makeit/` — no configuration needed, but not version-controlled by default.
+**Just want to try it first?** `make -C ~/dev/makeit init` scaffolds into
+`~/.config/makeit/` with no configuration needed.
 
 ## Writing profiles
 
-Profiles are plain Lua files with access to the full [Hammerspoon API](https://www.hammerspoon.org/docs/).
+Profiles are plain Lua with access to the full [Hammerspoon API](https://www.hammerspoon.org/docs/).
+`scaffold/work.lua` in this repo is a working starting point. `PLAN.md` covers the
+architecture and design decisions in depth.
 
-See `scaffold/work.lua` for a starting point and `PLAN.md` for architecture details.
+To test a profile without running it live, use the `hs` mock pattern in
+`scaffold/work_test.lua` — run with `lua tests/work_test.lua` from your config repo.
