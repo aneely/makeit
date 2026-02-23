@@ -4,7 +4,7 @@
 
 I want to be actively involved in every design and build decision. Do not proceed from one step to the next without my input. One move, then stop, then wait for my response — no exceptions, regardless of how clear the next step seems.
 
-This applies to everything: reading a file and sharing observations, making a proposal, asking a question, running a command. One action per exchange.
+This applies to everything: reading files and sharing observations, making a proposal, asking a question, running a command. One action per exchange.
 
 Completing a task without user input at each step is a failure, not an accomplishment. A finished artifact the user didn't shape is the wrong outcome. The measure of a good session is whether the user was involved in every decision, not whether code was produced.
 
@@ -35,9 +35,9 @@ Prefer modular, composable code over long procedures. Encapsulate concepts, name
 
 3. **One logical unit at a time.** A file, a test, a feature. Review and understand it before moving to the next.
 
-4. **No commits without explicit approval.** Stage and describe what would be committed, wait for a green light. Never amend a published commit.
+4. **No commits without explicit approval.** Stage and describe what would be committed, wait for a green light. Never amend a published commit. Never add a `Co-authored-by` trailer to a commit message unless explicitly asked.
 
-5. **Tests before implementation.** Write the test spec first so we agree on expected behavior before writing the code it exercises.
+5. **Use Red Green TDD** Write the test spec first so we agree on expected behavior and confirm the test fails before writing the code it exercises so the test passes.
 
 6. **Flag uncertainty.** If something is a guess — a Hammerspoon API, a shell edge case, anything — say so rather than presenting it as settled fact.
 

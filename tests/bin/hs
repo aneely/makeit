@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+# Mock hs for testing — echoes what was called so BATS can assert on it
+echo "hs $*"
+exit 0

@@ -1,0 +1,164 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# ---------------------------------------------------------------------------
+# Config
+# ---------------------------------------------------------------------------
+
+config_dir() {
+  echo "${MAKEIT_CONFIG:-$HOME/.config/makeit}"
+}
+
+# ---------------------------------------------------------------------------
+# Argument classification
+# ---------------------------------------------------------------------------
+
+is_file_path() {
+  local arg="$1"
+  [[ "$arg" == *.lua || "$arg" == */* || "$arg" == .* || "$arg" == ~* ]]
+}
+
+# ---------------------------------------------------------------------------
+# Path resolution
+# ---------------------------------------------------------------------------
+
+resolve_file_path() {
+  local arg="$1"
+  local path="${arg/#\~/$HOME}"
+  [[ "$path" != /* ]] && path="$PWD/$path"
+  echo "$path"
+}
+
+resolve_profile_path() {
+  local name="$1"
+  echo "$(config_dir)/$name.lua"
+}
+
+# ---------------------------------------------------------------------------
+# Guards
+# ---------------------------------------------------------------------------
+
+require_config_dir() {
+  if [[ ! -d "$(config_dir)" ]]; then
+    echo "makeit: no config dir found. Set \$MAKEIT_CONFIG or run: make init" >&2
+    exit 1
+  fi
+}
+
+require_file() {
+  local path="$1" label="$2"
+  if [[ ! -f "$path" ]]; then
+    echo "makeit: $label not found: $path" >&2
+    exit 1
+  fi
+}
+
+# ---------------------------------------------------------------------------
+# Commands
+# ---------------------------------------------------------------------------
+
+cmd_list() {
+  require_config_dir
+  shopt -s nullglob
+  local profiles=("$(config_dir)"/*.lua)
+  if [[ ${#profiles[@]} -eq 0 ]]; then
+    echo "makeit: no profiles found in $(config_dir)" >&2
+    exit 1
+  fi
+  for p in "${profiles[@]}"; do
+    basename "$p" .lua
+  done
+}
+
+cmd_clear() {
+  local path
+  path="$(config_dir)/clear.lua"
+  if [[ ! -f "$path" ]]; then
+    echo "makeit: no clear.lua found in $(config_dir)" >&2
+    exit 1
+  fi
+  run_profile "$path"
+}
+
+cmd_file() {
+  local arg="$1"
+  local path
+  path="$(resolve_file_path "$arg")"
+  if [[ ! -f "$path" ]]; then
+    echo "makeit: file not found: $arg" >&2
+    exit 1
+  fi
+  run_profile "$path"
+}
+
+cmd_profile() {
+  require_config_dir
+  local path
+  path="$(resolve_profile_path "$1")"
+  if [[ ! -f "$path" ]]; then
+    echo "makeit: profile not found: $1" >&2
+    list_available_profiles
+    exit 1
+  fi
+  run_profile "$path"
+}
+
+# ---------------------------------------------------------------------------
+# Helpers
+# ---------------------------------------------------------------------------
+
+# Prints available profiles to stderr. Used when a named profile is not found.
+list_available_profiles() {
+  shopt -s nullglob
+  local available=("$(config_dir)"/*.lua)
+  if [[ ${#available[@]} -gt 0 ]]; then
+    echo "available profiles:" >&2
+    for p in "${available[@]}"; do
+      echo "  $(basename "$p" .lua)" >&2
+    done
+  fi
+}
+
+# ---------------------------------------------------------------------------
+# Execution
+# ---------------------------------------------------------------------------
+
+run_profile() {
+  local path="$1"
+  hs -c "dofile([=[$path]=])"
+}
+
+# ---------------------------------------------------------------------------
+# Usage
+# ---------------------------------------------------------------------------
+
+usage() {
+  echo "usage: makeit <profile>    run a profile from config dir" >&2
+  echo "       makeit <file.lua>   run any .lua file directly" >&2
+  echo "       makeit list         list available profiles" >&2
+  echo "       makeit clear        run clear.lua from config dir" >&2
+  exit 1
+}
+
+# ---------------------------------------------------------------------------
+# Main
+# ---------------------------------------------------------------------------
+
+main() {
+  local cmd="${1:-}"
+  [[ -z "$cmd" ]] && usage
+
+  case "$cmd" in
+    list)  cmd_list ;;
+    clear) cmd_clear ;;
+    *)
+      if is_file_path "$cmd"; then
+        cmd_file "$cmd"
+      else
+        cmd_profile "$cmd"
+      fi
+      ;;
+  esac
+}
+
+main "$@"
