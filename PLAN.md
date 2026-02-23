@@ -261,19 +261,22 @@ Alternatively: symlink your profiles dir to the XDG fallback and skip the env va
 3. Open Hammerspoon console (menu bar icon → Console), run `hs.ipc.cliInstall()`
 4. Create `~/.hammerspoon/init.lua` containing: `hs.ipc.cliInstall()`
 
+### Install dependencies
+5. `brew install lua` — required for profile unit tests (`lua tests/work_test.lua`)
+
 ### Install makeit
-5. `git clone https://github.com/you/makeit ~/dev/makeit`
-6. `make -C ~/dev/makeit install` — installs `makeit` to `~/.local/bin`, warns if `hs` missing
+6. `git clone https://github.com/you/makeit ~/dev/makeit`
+7. `make -C ~/dev/makeit install` — installs `makeit` to `~/.local/bin`, warns if `hs` missing
 
 ### Quick start (no config repo needed)
-7. Write any `.lua` file and run it: `makeit ./my-script.lua`
+8. Write any `.lua` file and run it: `makeit ./my-script.lua`
 
 ### Full config repo setup (when ready)
-8. `make -C ~/dev/makeit init` — scaffolds config dir with a sample profile and passing test
+9. `make -C ~/dev/makeit init` — scaffolds config dir with a sample profile and passing test
    - Custom location: `make -C ~/dev/makeit init CONFIG_DIR=~/dev/my-profiles`
    - Then add `export MAKEIT_CONFIG=~/dev/my-profiles` to `.zshrc`
-9. `cd <config-dir> && git init && git add . && git commit -m "initial profiles"`
-10. `makeit work`
+10. `cd <config-dir> && git init && git add . && git commit -m "initial profiles"`
+11. `makeit work`
 
 ---
 

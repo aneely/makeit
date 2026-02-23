@@ -15,6 +15,7 @@ makeit ./draft.lua   # run any .lua file directly
 - macOS
 - [Hammerspoon](https://www.hammerspoon.org) installed and running
 - `hs` CLI installed (run `hs.ipc.cliInstall()` in Hammerspoon console once)
+- `lua` — for running profile unit tests (`brew install lua`)
 
 ## Install
 
