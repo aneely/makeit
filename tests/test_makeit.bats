@@ -156,3 +156,26 @@ teardown() {
   assert_output --partial "dofile"
   assert_output --partial "work.lua"
 }
+
+# ---------------------------------------------------------------------------
+# Preflight dependency checks
+# ---------------------------------------------------------------------------
+
+@test "preflight: hs not found exits 1 with message" {
+  touch "$CONF_DIR/work.lua"
+  PATH="/usr/bin:/bin" run "$MAKEIT" work
+  assert_failure
+  assert_output --partial "hs not found"
+}
+
+@test "preflight: Hammerspoon not running exits 1 with message" {
+  touch "$CONF_DIR/work.lua"
+  local fake_bin
+  fake_bin=$(mktemp -d)
+  printf '#!/bin/sh\nexit 1\n' > "$fake_bin/pgrep"
+  chmod +x "$fake_bin/pgrep"
+  PATH="$fake_bin:$BATS_TEST_DIRNAME/bin:$PATH" run "$MAKEIT" work
+  assert_failure
+  assert_output --partial "Hammerspoon"
+  rm -rf "$fake_bin"
+}

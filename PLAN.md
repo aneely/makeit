@@ -289,7 +289,8 @@ The `bin/makeit` shell script:
 1. Handles built-in commands (`list`, `clear`) first
 2. If the argument ends in `.lua` or looks like a path (contains `/`, starts with `.` or `~`): treat as a file path and run it directly
 3. Otherwise: treat as a profile name, read `$MAKEIT_CONFIG` (fallback `~/.config/makeit/`), resolve to `<config-dir>/<name>.lua`
-4. Runs it: `hs -c "dofile([==[...]==])"`  — Lua long-string delimiters avoid quoting issues with paths
+4. Before running any profile, checks that `hs` is on PATH and Hammerspoon is running — exits with a clear message if either is missing
+5. Runs it: `hs -c "dofile([==[...]==])"`  — Lua long-string delimiters avoid quoting issues with paths
 
 This means a config repo is not required to get a first win — write any `.lua` file, run it with `makeit file.lua`.
 

@@ -45,6 +45,17 @@ require_config_dir() {
   fi
 }
 
+require_hammerspoon() {
+  if ! command -v hs >/dev/null 2>&1; then
+    echo "makeit: hs not found. Open Hammerspoon → Console and run: hs.ipc.cliInstall()" >&2
+    exit 1
+  fi
+  if ! pgrep -x Hammerspoon >/dev/null 2>&1; then
+    echo "makeit: Hammerspoon is not running. Launch it and try again." >&2
+    exit 1
+  fi
+}
+
 require_file() {
   local path="$1" label="$2"
   if [[ ! -f "$path" ]]; then
@@ -125,6 +136,7 @@ list_available_profiles() {
 
 run_profile() {
   local path="$1"
+  require_hammerspoon
   hs -c "dofile([=[$path]=])"
 }
 

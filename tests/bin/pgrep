@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+# Mock pgrep for testing — simulates Hammerspoon running
+exit 0
