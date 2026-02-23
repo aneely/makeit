@@ -17,12 +17,14 @@ real-world exercise of the tool beyond the sample `work.lua` scaffold.
 
 ## Tasks
 
-- [ ] Decide on a profile to write (morning recovery, work, studio, etc.)
-- [ ] Set up config repo at chosen location with `make init`
-- [ ] Write the profile iteratively — start simple, layer in complexity
-- [ ] Write a unit test for it using the hs mock pattern
-- [ ] Run it for real and note anything that doesn't work as expected
-- [ ] Capture any missing capabilities or friction points as new story stubs
+- [x] Decide on a profile to write (morning recovery)
+- [x] Set up config repo at chosen location with `make init`
+- [x] Get apps launching — core applications open in sequence
+- [x] Write a unit test for the profile using the hs mock pattern
+- [x] Run it live and confirm it works end-to-end
+- [x] Add utility apps and background tools
+- [x] Tackle order-dependent launches (gating on network/VPN/etc.)
+- [x] Capture any discovered gaps as new story stubs
 
 ## Done looks like
 
