@@ -1,5 +1,8 @@
 # Handoff
 
-Engine scaffold is complete and committed. No story is currently in progress.
+`make init` story is complete and committed. No story is currently in progress.
 
-Next session: pick up `plans/todo/make-init.md`. Read `AGENTS.md`, `PLAN.md`, and `plans/todo/make-init.md` to get oriented, move the story file to `plans/in-progress/`, and begin with the BATS tests before touching the Makefile.
+Next session: pick up `plans/todo/onboarding-config-repo.md`. Read `AGENTS.md`, `PLAN.md`,
+and `plans/todo/onboarding-config-repo.md` to get oriented. The core decision is whether
+to change the default `CONFIG_DIR`, guide users via `make init` output, or lead with the
+git repo pattern in the README. Resolve that decision before touching any code.

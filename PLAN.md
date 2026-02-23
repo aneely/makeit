@@ -295,8 +295,9 @@ This means a config repo is not required to get a first win — write any `.lua`
 ## Makefile
 
 ```makefile
-PREFIX     ?= ~/.local
-CONFIG_DIR ?= $(HOME)/.config/makeit
+PREFIX             ?= ~/.local
+DEFAULT_CONFIG_DIR ?= $(HOME)/.config/makeit
+CONFIG_DIR         ?= $(DEFAULT_CONFIG_DIR)
 
 install:
 	install -d $(PREFIX)/bin
@@ -308,7 +309,7 @@ uninstall:
 	rm -f $(PREFIX)/bin/makeit
 
 test:
-	bats tests/
+	bats tests/*.bats
 
 # Scaffold a new config repo at CONFIG_DIR (or custom: make init CONFIG_DIR=~/dev/my-profiles)
 init:
@@ -325,7 +326,7 @@ init:
 		cp scaffold/config.Makefile $(CONFIG_DIR)/Makefile; \
 		echo "  Created $(CONFIG_DIR)/Makefile"; \
 	fi
-	@if [ "$(CONFIG_DIR)" != "$(HOME)/.config/makeit" ]; then \
+	@if [ "$(CONFIG_DIR)" != "$(DEFAULT_CONFIG_DIR)" ]; then \
 		echo "  Add to your .zshrc: export MAKEIT_CONFIG=$(CONFIG_DIR)"; \
 	fi
 	@echo "  Done. Try: makeit work"

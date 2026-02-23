@@ -1,5 +1,6 @@
-PREFIX     ?= ~/.local
-CONFIG_DIR ?= $(HOME)/.config/makeit
+PREFIX             ?= ~/.local
+DEFAULT_CONFIG_DIR ?= $(HOME)/.config/makeit
+CONFIG_DIR         ?= $(DEFAULT_CONFIG_DIR)
 
 install:
 	install -d $(PREFIX)/bin
@@ -14,6 +15,22 @@ test:
 	bats tests/*.bats
 
 init:
-	@echo "  init is not yet available — scaffold files are not built yet."
+	mkdir -p $(CONFIG_DIR)/tests
+	@if [ ! -f $(CONFIG_DIR)/work.lua ]; then \
+		cp scaffold/work.lua $(CONFIG_DIR)/work.lua; \
+		echo "  Created $(CONFIG_DIR)/work.lua"; \
+	fi
+	@if [ ! -f $(CONFIG_DIR)/tests/work_test.lua ]; then \
+		cp scaffold/work_test.lua $(CONFIG_DIR)/tests/work_test.lua; \
+		echo "  Created $(CONFIG_DIR)/tests/work_test.lua"; \
+	fi
+	@if [ ! -f $(CONFIG_DIR)/Makefile ]; then \
+		cp scaffold/config.Makefile $(CONFIG_DIR)/Makefile; \
+		echo "  Created $(CONFIG_DIR)/Makefile"; \
+	fi
+	@if [ "$(CONFIG_DIR)" != "$(DEFAULT_CONFIG_DIR)" ]; then \
+		echo "  Add to your .zshrc: export MAKEIT_CONFIG=$(CONFIG_DIR)"; \
+	fi
+	@echo "  Done. Try: makeit work"
 
 .PHONY: install uninstall test init
