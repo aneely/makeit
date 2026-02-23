@@ -35,10 +35,12 @@ teardown() {
   assert_file_exists "$CONFIG_DIR/Makefile"
 }
 
-@test "init: prints done message" {
+@test "init: prints done message with git instructions" {
   run make -C "$REPO" init CONFIG_DIR="$CONFIG_DIR"
   assert_success
-  assert_output --partial "Done. Try: makeit work"
+  assert_output --partial "Done. To version-control your profiles:"
+  assert_output --partial "git init && git add . && git commit"
+  assert_output --partial "Then: makeit work"
 }
 
 @test "init: custom CONFIG_DIR prints export reminder" {

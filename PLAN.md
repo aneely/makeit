@@ -329,7 +329,9 @@ init:
 	@if [ "$(CONFIG_DIR)" != "$(DEFAULT_CONFIG_DIR)" ]; then \
 		echo "  Add to your .zshrc: export MAKEIT_CONFIG=$(CONFIG_DIR)"; \
 	fi
-	@echo "  Done. Try: makeit work"
+	@echo "  Done. To version-control your profiles:"
+	@echo "    cd $(CONFIG_DIR) && git init && git add . && git commit -m \"initial profiles\""
+	@echo "  Then: makeit work"
 
 .PHONY: install uninstall test init
 ```

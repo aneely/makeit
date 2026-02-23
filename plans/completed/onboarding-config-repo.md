@@ -11,6 +11,16 @@ pattern that is a core project value.
 2. What does the README feature as the primary adoption path — zero-config default, or
    git repo from the start?
 
+## Considered and set aside: two-tier sync approach
+
+Discussed adding a `makeit sync` subcommand to copy profiles from a user-specified repo
+into `~/.config/makeit`, separating version-controlled source from runtime location.
+
+Rejected: introduces sync drift — editing a profile without syncing means `makeit` runs
+the old version. `$MAKEIT_CONFIG` pointing directly at the repo already achieves the same
+separation without copies or state. Also conflicts with the "no state tracking" design
+principle. The env var is a one-time setup cost; drift is an ongoing runtime risk.
+
 ## Constraints to keep in mind
 
 - Portability is a stated core value: config repo should be independently version-controlled
@@ -30,7 +40,7 @@ pattern that is a core project value.
 
 ## Tasks
 
-- [ ] Decide: change default, guide via init, or just lead with git repo in README
-- [ ] Update `make init` behavior and/or output to reflect decision
-- [ ] Update README new-user flow to feature the version-controlled pattern prominently
-- [ ] Update PLAN.md to reflect final decision
+- [x] Decide: Option A — lead with git repo in README, keep default behavior, nudge via init output
+- [x] Update `make init` output to include git init instructions after scaffolding
+- [x] Update README new-user flow to feature the version-controlled pattern prominently
+- [x] Update PLAN.md to reflect final decision

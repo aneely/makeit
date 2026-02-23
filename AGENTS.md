@@ -51,6 +51,7 @@ When there's a choice between a short procedure and a named abstraction, prefer 
 
    - **Prefer `git mv`** over `mv` when moving files so history is preserved as a rename, not a delete-and-create.
    - **Prefer `git commit --amend`** for atomic corrections to the immediately preceding commit — typos, missing files, minor inaccuracies — rather than adding a trivial fixup commit.
+   - **Always use `--force-with-lease`** instead of `--force` when a force push is required.
 
 5. **Use Red Green TDD** Write the test spec first so we agree on expected behavior and confirm the test fails before writing the code it exercises so the test passes.
 
