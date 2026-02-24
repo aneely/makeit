@@ -53,7 +53,7 @@ When there's a choice between a short procedure and a named abstraction, prefer 
    - **Prefer `git commit --amend`** for atomic corrections to the immediately preceding commit — typos, missing files, minor inaccuracies — rather than adding a trivial fixup commit.
    - **Always use `--force-with-lease`** instead of `--force` when a force push is required.
 
-5. **Use Red Green TDD** Write the test spec first so we agree on expected behavior and confirm the test fails before writing the code it exercises so the test passes.
+5. **Use Red Green TDD** Before touching code, run the existing tests to establish a clean baseline. Write tests that describe the desired behavior and confirm they fail. Write the code that makes them pass, treating errors as signal. When tests are green, surface a commit for review.
 
 6. **Flag uncertainty.** If something is a guess — a Hammerspoon API, a shell edge case, anything — say so rather than presenting it as settled fact.
 
