@@ -154,7 +154,7 @@ Some specifics (exact screen mode args, Finder window positioning, browser URL o
 | Shell (hs.execute) | simple utilities, anything not in Hammerspoon | `hs.execute()` |
 
 **Note:** `hs.execute` runs via `/bin/sh` with a minimal PATH. Use full binary paths
-(e.g. `/usr/local/bin/vpn-cli`) rather than bare command names to avoid silent failures.
+(e.g. `/usr/local/bin/mytool`) rather than bare command names to avoid silent failures.
 
 ---
 

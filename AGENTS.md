@@ -59,6 +59,8 @@ When there's a choice between a short procedure and a named abstraction, prefer 
 
 7. **Don't build ahead.** Only implement what's been discussed and agreed. No "while I'm here" additions.
 
+8. **Keep personal information out of the public repo.** Session notes, story files, and docs committed to this repo are publicly visible. Do not encode personal details — app names from private profiles, filesystem paths, credentials, machine-specific configuration, or any information the user wouldn't want public. Reference such details in the session only; do not write them into committed files.
+
 ## Key Files
 
 `README.md` is for humans. It should give a new person everything they need to understand the project, adopt it, and navigate the repo structure if they clone it.
