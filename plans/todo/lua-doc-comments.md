@@ -18,3 +18,4 @@ view of the codebase from generated summaries rather than reading raw source fil
 - [ ] Annotate existing source files (`bin/makeit`, scaffold files)
 - [ ] Add a `make docs` target that emits a summary an agent can read in one pass
 - [ ] Update PLAN.md to reference the docs target and convention
+- [ ] Move to `plans/completed/`

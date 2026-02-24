@@ -77,6 +77,8 @@ Key decisions are documented in `PLAN.md`. Read it for architecture, capability 
 
 `plans/` contains story files for active and upcoming features. The subfolder a story lives in matches its current status. Each story file is the source of truth for that feature — it contains a markdown task checklist and everything needed to resume work across sessions. Keep it current.
 
+Every story's task list must end with `- [ ] Move to \`plans/completed/\``. When all tasks are checked off, `git mv` the file from its current folder to `plans/completed/`.
+
 ### Architecture in brief
 
 - `bin/makeit` — shell script, the entire engine

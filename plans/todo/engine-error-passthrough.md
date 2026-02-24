@@ -24,3 +24,9 @@ commands, or surface the problem to the user in a script context.
 - [ ] Update `bin/makeit` to surface profile errors with a non-zero exit code
 - [ ] Update BATS tests to cover error propagation
 - [ ] Update PLAN.md
+- [ ] Move to `plans/completed/`
+
+## Related
+
+`smb-mount-timeout.md` depends on this story. Once a profile can signal failure, the mount
+timeout can use that mechanism rather than silently returning 0.

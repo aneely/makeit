@@ -24,3 +24,4 @@ prompt explicitly as antagonistic: find problems, challenge assumptions, don't d
 - [ ] Run an antagonistic review on a non-trivial piece of code (e.g. bin/makeit)
 - [ ] Evaluate: did it find anything the primary agent missed?
 - [ ] If patterns prove useful, codify them in AGENTS.md
+- [ ] Move to `plans/completed/`
