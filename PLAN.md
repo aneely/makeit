@@ -239,6 +239,11 @@ If the Hammerspoon team (or a fork) ever ships a standalone CLI formula, the mig
 Lives wherever `$MAKEIT_CONFIG` points (e.g. `~/dev/my-profiles/`).
 Set in `.zshrc`: `export MAKEIT_CONFIG=~/dev/my-profiles`
 
+Alternatively, use [direnv](https://direnv.net) with a `~/dev/.envrc` for per-directory
+config — useful when different directories or machines need different profile repos without
+a global env var. direnv expands `~` correctly in `.envrc` assignments, so
+`export MAKEIT_CONFIG=~/dev/my-profiles` works as expected.
+
 Alternatively: symlink your profiles dir to the XDG fallback and skip the env var:
 `ln -s ~/dev/my-profiles ~/.config/makeit`
 

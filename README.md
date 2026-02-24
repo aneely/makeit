@@ -49,6 +49,9 @@ export MAKEIT_CONFIG=~/dev/my-profiles
 Your config repo travels with you. Clone it on a new machine, set the env var, and
 you're back to your full environment in one command.
 
+If you use [direnv](https://direnv.net), a `~/dev/.envrc` is a nice alternative to the
+`.zshrc` export — all child directories inherit it without touching your global shell config.
+
 **Just want to try it first?** `make -C ~/dev/makeit init` scaffolds into
 `~/.config/makeit/` with no configuration needed.
 
