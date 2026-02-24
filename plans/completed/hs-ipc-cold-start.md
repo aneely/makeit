@@ -24,8 +24,11 @@ The README described only the binary installation step and implied it was suffic
 
 - Added `require("hs.ipc")` to `~/.hammerspoon/init.lua`
 - Updated README to document both steps: binary install and `init.lua` require
-- Added `initial-window = true` to Ghostty config so it opens a window at login rather
-  than launching silently as a background process
+- Added `initial-window = true` to Ghostty config — necessary but not sufficient on its
+  own; Ghostty appears in the Dock on login-item launch but does not open a window
+- Added `hs.timer.doAfter(5, function() hs.application.launchOrFocus("Ghostty") end)` to
+  `~/.hammerspoon/init.lua` — activates Ghostty 5 seconds after Hammerspoon loads, which
+  triggers `initial-window` and opens a window; validated on cold start
 
 ## Tasks
 
@@ -33,7 +36,7 @@ The README described only the binary installation step and implied it was suffic
 - [x] If it must be re-run, explore whether it can be called automatically from `init.lua`
 - [x] Improve the error message or README guidance so the fix is discoverable without reading the full docs
 - [x] Investigate whether Ghostty can be told to open a new window on startup, not just launch
-- [ ] Validate on a real cold start: Hammerspoon IPC connects without manual steps, Ghostty opens a window
+- [x] Validate on a real cold start: Hammerspoon IPC connects without manual steps, Ghostty opens a window
 - [ ] Move to `plans/completed/`
 
 ## Handoff

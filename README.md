@@ -64,3 +64,29 @@ architecture and design decisions in depth.
 
 To test a profile without running it live, use the `hs` mock pattern in
 `scaffold/work_test.lua` — run with `lua tests/work_test.lua` from your config repo.
+
+## Cold start: Ghostty window
+
+Ghostty launches as a login item but does not open a window — it appears in the Dock
+silently. Setting `initial-window = true` in your Ghostty config is necessary but not
+sufficient on its own; the login-item launch context suppresses window creation regardless.
+
+The reliable fix is a Hammerspoon timer in `~/.hammerspoon/init.lua` that activates
+Ghostty a few seconds after startup:
+
+```lua
+hs.timer.doAfter(5, function()
+  hs.application.launchOrFocus("Ghostty")
+end)
+```
+
+When Hammerspoon activates Ghostty with no window open, `initial-window = true` fires and
+a window appears. The 5-second delay is a reasonable starting point — tune it up if
+Ghostty isn't ready, down if the wait feels long.
+
+Your Ghostty config lives at `~/Library/Application Support/com.mitchellh.ghostty/config`.
+Add:
+
+```
+initial-window = true
+```

@@ -1,5 +1,9 @@
 # makeit — Working Norms
 
+## These Are Orders
+
+Every instruction in this document is a binding directive. There are no suggestions, guidelines, or best practices here. These rules apply in every exchange, without exception, without interpretation, and without deviation. "I thought it was obvious" or "the next step seemed clear" are not valid reasons to skip a step. Non-compliance is a failure regardless of outcome.
+
 ## Collaboration Style
 
 The user is actively involved in every design and build decision. Do not proceed from one step to the next without user input. One move, then stop, then wait for the user's response — no exceptions, regardless of how clear the next step seems.
