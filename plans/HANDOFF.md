@@ -1,13 +1,16 @@
 # Handoff
 
-Read `AGENTS.md`, `PLAN.md`, and `plans/in-progress/hs-ipc-cold-start.md`.
+Read `AGENTS.md`, `PLAN.md`. No active in-progress story — work this session was in
+`../makeit-profiles/` (the private profiles repo).
 
-Ghostty cold-start window fix is in progress. `initial-window = true` is set in the
-Ghostty config but does not open a window on login-item launch (Ghostty appears in Dock
-with no window). Added `hs.timer.doAfter(5, ...)` to `~/.hammerspoon/init.lua` to
-activate Ghostty 5 seconds after Hammerspoon loads, which should trigger `initial-window`.
-User restarted to validate.
+Session focused on `clear.lua` and a Claude Desktop debugging detour. Both are resolved
+and committed to `makeit-profiles`. Key outcomes:
 
-Next task: confirm whether Ghostty opens a window on cold start. If yes, check off the
-validation task and `git mv` the story to `plans/completed/`. If no, tune the delay or
-explore alternative approaches.
+- `clear.lua` keep list updated: KeepingYouAwake added; Superwhisper was already present
+- `morning.lua` updated: KeepingYouAwake added to utilities section
+- Claude Desktop broken-startup root cause identified: `secureVmFeaturesEnabled: false` in
+  `claude_desktop_config.json` causes headless launch; `toggle_claude_cowork` script retired
+- Session notes updated: `session-notes/2026-02-24-claude-desktop-debug.md`
+
+Next task: no specific next action queued. Pick up from `plans/todo/` or continue
+profiling work in `makeit-profiles/`.
