@@ -19,7 +19,8 @@ runs it with one command.
 
 - macOS
 - [Hammerspoon](https://www.hammerspoon.org) installed and running as a login item
-- `hs` CLI installed: open Hammerspoon → Console, run `hs.ipc.cliInstall()` once
+- `hs` CLI installed: open Hammerspoon → Console, run `hs.ipc.cliInstall()` once to install the binary
+- `require("hs.ipc")` in your `~/.hammerspoon/init.lua` so the IPC module loads on every restart
 - `lua` for running profile unit tests (`brew install lua`)
 
 ## Install
