@@ -55,6 +55,8 @@ duplicating logic.
 - [x] Try extracting one unit (e.g. drive mounting) as a standalone profile and composing
       it back into `morning.lua` via `dofile()`
 - [x] Evaluate whether `require()` is worth the setup cost over `dofile()`
-- [ ] Decide: scaffold-bundled utilities vs config-repo-only
-- [ ] Document the pattern in PLAN.md if a clear convention emerges
+- [ ] Decide: scaffold-bundled utilities vs config-repo-only *(deferred — premature
+      commitment; scaffold versioning problem unsolved)*
+- [ ] Document the pattern in PLAN.md if a clear convention emerges *(deferred — pending
+      scaffold decision)*
 - [ ] Move to `plans/completed/`
