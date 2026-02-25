@@ -31,12 +31,30 @@ duplicating logic.
    does it need to behave differently in each context? Or is `dofile()` transparent enough
    that there's no distinction?
 
+## Decisions
+
+- **Naming convention** — `lib/` subdirectory in the config repo. Keeps library code
+  distinct from runnable profiles. Not directly invocable by name without engine changes,
+  which is acceptable for helpers that aren't meant to be standalone entry points.
+
+- **Composition mechanism** — `dofile()` with path built from `MAKEIT_CONFIG` env var
+  (falling back to `$HOME/.config/makeit`), mirroring the engine's own resolution logic.
+  No caching, no module system complexity.
+
+- **Profile contract** — no distinction needed. `dofile()` is transparent: functions
+  defined without `local` in a lib file become globals in the calling profile's environment.
+  Standalone and composable are the same thing.
+
+- **scaffold vs config-repo** — unresolved. Helpers currently live in the user's config
+  repo (`makeit-profiles`). Whether generic ones (Finder, volume) should ship in `scaffold/`
+  is still open.
+
 ## Tasks
 
-- [ ] Survey what `morning.lua` actually does that could stand alone
-- [ ] Try extracting one unit (e.g. drive mounting) as a standalone profile and composing
+- [x] Survey what `morning.lua` actually does that could stand alone
+- [x] Try extracting one unit (e.g. drive mounting) as a standalone profile and composing
       it back into `morning.lua` via `dofile()`
-- [ ] Evaluate whether `require()` is worth the setup cost over `dofile()`
+- [x] Evaluate whether `require()` is worth the setup cost over `dofile()`
 - [ ] Decide: scaffold-bundled utilities vs config-repo-only
 - [ ] Document the pattern in PLAN.md if a clear convention emerges
 - [ ] Move to `plans/completed/`
