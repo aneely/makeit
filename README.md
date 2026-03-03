@@ -65,6 +65,19 @@ architecture and design decisions in depth.
 To test a profile without running it live, use the `hs` mock pattern in
 `scaffold/work_test.lua` — run with `lua tests/work_test.lua` from your config repo.
 
+## Verify your setup
+
+After installing, run the smoke tests to confirm Hammerspoon is wired up correctly and
+the engine can communicate with the daemon:
+
+```bash
+make -C ~/dev/makeit smoke
+```
+
+This checks that `hs` is on your PATH, Hammerspoon is running, `lua` is installed, and
+that makeit can successfully inject configuration into the Hammerspoon execution context.
+Useful after a fresh install or when setting up a new machine.
+
 ## Cold start: Ghostty window
 
 Ghostty launches as a login item but does not open a window — it appears in the Dock

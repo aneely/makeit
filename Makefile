@@ -12,7 +12,10 @@ uninstall:
 	rm -f $(PREFIX)/bin/makeit
 
 test:
-	bats tests/*.bats
+	bats tests/test_makeit.bats tests/test_make_init.bats
+
+smoke:
+	bats tests/smoke.bats
 
 init:
 	mkdir -p $(CONFIG_DIR)/tests
@@ -35,4 +38,4 @@ init:
 	@echo "    cd $(CONFIG_DIR) && git init && git add . && git commit -m \"initial profiles\""
 	@echo "  Then: makeit work"
 
-.PHONY: install uninstall test init
+.PHONY: install uninstall test smoke init

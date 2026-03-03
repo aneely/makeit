@@ -226,7 +226,10 @@ If the Hammerspoon team (or a fork) ever ships a standalone CLI formula, the mig
 │   ├── bin/
 │   │   └── hs              # Mock hs binary for BATS tests
 │   ├── test_helper/        # Vendored bats-assert, bats-support, bats-file
-│   └── test_makeit.bats    # BATS tests for the shell wrapper
+│   ├── test_makeit.bats    # BATS tests for the shell wrapper
+│   ├── test_make_init.bats # BATS tests for make init
+│   ├── smoke.bats          # Smoke tests: dependency checks and daemon boundary
+│   └── smoke_probe.lua     # Lua fixture used by the daemon boundary smoke test
 ├── plans/                  # Kanban story files (todo/, in-progress/, completed/)
 ├── session-notes/          # Freeform session notes by date
 ├── Makefile
@@ -349,7 +352,8 @@ init:
 
 ## Testing Approach
 
-- **Shell wrapper** (`~/dev/makeit/tests/`): BATS tests covering profile dispatch, `list`, `clear`, missing profile error, missing/unconfigured config dir
+- **Shell wrapper** (`make test`): BATS tests covering profile dispatch, `list`, `clear`, missing profile error, missing/unconfigured config dir, and the engine contract (that `hs` receives `MAKEIT_CONFIG` as an injected Lua global)
+- **Smoke tests** (`make smoke`): require a live Hammerspoon instance; verify dependencies are installed (`hs`, Hammerspoon, `lua`) and that `MAKEIT_CONFIG` survives the trip into the daemon. Intended for post-install verification on a new machine, not run by `make test`
 - **Profiles** (`<config-repo>/tests/`): Lua tests using a lightweight `hs` mock — stub the `hs` table, `dofile()` the profile, assert on observed calls. Run with plain `lua`. `make init` scaffolds a passing example test out of the box.
 
 ```lua

@@ -157,6 +157,14 @@ teardown() {
   assert_output --partial "work.lua"
 }
 
+@test "profile: hs command includes MAKEIT_CONFIG global set to config dir" {
+  touch "$CONF_DIR/work.lua"
+
+  run "$MAKEIT" work
+  assert_success
+  assert_output --partial "MAKEIT_CONFIG=[=[$CONF_DIR]=]"
+}
+
 # ---------------------------------------------------------------------------
 # Preflight dependency checks
 # ---------------------------------------------------------------------------

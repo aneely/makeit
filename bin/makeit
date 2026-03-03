@@ -136,8 +136,10 @@ list_available_profiles() {
 
 run_profile() {
   local path="$1"
+  local dir
+  dir="$(config_dir)"
   require_hammerspoon
-  hs -c "dofile([=[$path]=])"
+  hs -c "MAKEIT_CONFIG=[=[$dir]=]; dofile([=[$path]=])"
 }
 
 # ---------------------------------------------------------------------------
