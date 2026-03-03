@@ -49,7 +49,7 @@ with the injected `MAKEIT_CONFIG` global directly.
 - [x] Add `smoke` Makefile target; make `test` target explicit
 - [x] Run `make test` (25/25) and `make smoke` (4/4) — all green
 - [x] Manual verification: `makeit morning` ran successfully end-to-end
-- [ ] True up stale project files (README, PLAN.md) to reflect smoke test suite and engine change
-- [ ] Commit engine, profile, and test changes with descriptive message
-- [ ] Push changes
-- [ ] Move to `plans/completed/`
+- [x] True up stale project files (README, PLAN.md) to reflect smoke test suite and engine change
+- [x] Commit engine, profile, and test changes with descriptive message
+- [x] Push changes (makeit engine pushed; makeit-profiles has no remote configured)
+- [x] Move to `plans/completed/`
