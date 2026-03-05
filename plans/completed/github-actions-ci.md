@@ -22,6 +22,6 @@ excluded from CI.
 
 ## Tasks
 
-- [ ] Create `.github/workflows/test.yml`
-- [ ] Verify CI passes on push
-- [ ] Move to `plans/completed/`
+- [x] Create `.github/workflows/test.yml`
+- [x] Verify CI passes on push
+- [x] Move to `plans/completed/`
