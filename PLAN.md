@@ -10,10 +10,12 @@ No PATH conflicts. No conflicting brew package.
 **Decision:** `~/dev/makeit/`
 
 ### [x] Config Isolation (Multi-Machine Portability)
-**Decision:** Profiles are plain Lua files in a user-managed config repo.
-- `$MAKEIT_CONFIG` env var points at the config repo — primary mechanism
-- `~/.config/makeit/` is the fallback when `$MAKEIT_CONFIG` is not set
-- Config repo is version-controlled independently of the engine
+**Decision:** Profiles are plain Lua files in user-managed config repos.
+- `$XDG_CONFIG_HOME/makeit/sources` (defaulting to `~/.config/makeit/sources`) is a plain text file listing profile source directories, one per line
+- The engine reads this file at startup and searches sources top to bottom; first match wins
+- `makeit init` creates or appends to the sources file when scaffolding a new config repo
+- Multiple sources allow public, private, and machine-specific profiles to coexist
+- Config repos are version-controlled independently of the engine
 - Compatible with chezmoi or any dotfiles approach without depending on one
 
 ### [x] Profile Switching Behavior
@@ -239,16 +241,17 @@ If the Hammerspoon team (or a fork) ever ships a standalone CLI formula, the mig
 
 ## User Config Repo
 
-Lives wherever `$MAKEIT_CONFIG` points (e.g. `~/dev/my-profiles/`).
-Set in `.zshrc`: `export MAKEIT_CONFIG=~/dev/my-profiles`
+Profile source directories are listed in `~/.config/makeit/sources`, one per line.
+The engine searches top to bottom; first match wins.
 
-Alternatively, use [direnv](https://direnv.net) with a `~/dev/.envrc` for per-directory
-config — useful when different directories or machines need different profile repos without
-a global env var. direnv expands `~` correctly in `.envrc` assignments, so
-`export MAKEIT_CONFIG=~/dev/my-profiles` works as expected.
+```
+# ~/.config/makeit/sources
+~/scratchpad
+~/dev/my-profiles
+~/dev/work-profiles
+```
 
-Alternatively: symlink your profiles dir to the XDG fallback and skip the env var:
-`ln -s ~/dev/my-profiles ~/.config/makeit`
+`makeit init` and `makeit adopt` manage this file — users don't need to edit it by hand.
 
 ```
 ~/dev/my-profiles/
@@ -296,9 +299,12 @@ Alternatively: symlink your profiles dir to the XDG fallback and skip the env va
 The `bin/makeit` shell script:
 1. Handles built-in commands (`list`, `clear`) first
 2. If the argument ends in `.lua` or looks like a path (contains `/`, starts with `.` or `~`): treat as a file path and run it directly
-3. Otherwise: treat as a profile name, read `$MAKEIT_CONFIG` (fallback `~/.config/makeit/`), resolve to `<config-dir>/<name>.lua`
-4. Before running any profile, checks that `hs` is on PATH and Hammerspoon is running — exits with a clear message if either is missing
-5. Runs it: `hs -c "dofile([==[...]==])"`  — Lua long-string delimiters avoid quoting issues with paths
+3. Otherwise: treat as a profile name and resolve via the search path:
+   - Read `$XDG_CONFIG_HOME/makeit/sources` (default `~/.config/makeit/sources`) to get an ordered list of source directories
+   - Search top to bottom; first directory containing `<name>.lua` wins
+4. `makeit list` collects all `.lua` files from all sources, annotates each with its source path, and marks duplicates in losing sources as `[shadowed]`
+5. Before running any profile, checks that `hs` is on PATH and Hammerspoon is running — exits with a clear message if either is missing
+6. Runs it: `hs -c "dofile([==[...]==])"`  — Lua long-string delimiters avoid quoting issues with paths
 
 This means a config repo is not required to get a first win — write any `.lua` file, run it with `makeit file.lua`.
 

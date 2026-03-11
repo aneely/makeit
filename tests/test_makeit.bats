@@ -10,13 +10,18 @@ setup() {
 
   MAKEIT="$BATS_TEST_DIRNAME/../bin/makeit"
 
-  # Shared temp config dir; exported so tests can override with MAKEIT_CONFIG=...
+  # Temp config dir used as a profile source
   CONF_DIR=$(mktemp -d)
-  export MAKEIT_CONFIG="$CONF_DIR"
+
+  # Temp XDG dir with a sources file pointing at CONF_DIR
+  XDG_DIR=$(mktemp -d)
+  mkdir -p "$XDG_DIR/makeit"
+  echo "$CONF_DIR" > "$XDG_DIR/makeit/sources"
+  export XDG_CONFIG_HOME="$XDG_DIR"
 }
 
 teardown() {
-  rm -rf "$CONF_DIR"
+  rm -rf "$CONF_DIR" "$XDG_DIR"
 }
 
 # ---------------------------------------------------------------------------
@@ -33,13 +38,15 @@ teardown() {
 # makeit list
 # ---------------------------------------------------------------------------
 
-@test "list: no config dir exits 1 with message" {
-  MAKEIT_CONFIG="/tmp/nonexistent-makeit-$$" run "$MAKEIT" list
+@test "list: no sources file exits 1 with message" {
+  local empty_xdg=$(mktemp -d)
+  XDG_CONFIG_HOME="$empty_xdg" run "$MAKEIT" list
   assert_failure
-  assert_output --partial "no config dir found"
+  assert_output --partial "no sources file found"
+  rm -rf "$empty_xdg"
 }
 
-@test "list: empty config dir exits 1 with message" {
+@test "list: empty source dir exits 1 with message" {
   run "$MAKEIT" list
   assert_failure
   assert_output --partial "no profiles found"
@@ -62,7 +69,7 @@ teardown() {
 @test "clear: no clear.lua exits 1 with message" {
   run "$MAKEIT" clear
   assert_failure
-  assert_output --partial "no clear.lua found"
+  assert_output --partial "no clear.lua found in any source"
 }
 
 @test "clear: clear.lua exists runs it via hs dofile" {
@@ -127,10 +134,12 @@ teardown() {
 # makeit <profile> — named profile lookup
 # ---------------------------------------------------------------------------
 
-@test "profile: no config dir exits 1 with message" {
-  MAKEIT_CONFIG="/tmp/nonexistent-makeit-$$" run "$MAKEIT" work
+@test "profile: no sources file exits 1 with message" {
+  local empty_xdg=$(mktemp -d)
+  XDG_CONFIG_HOME="$empty_xdg" run "$MAKEIT" work
   assert_failure
-  assert_output --partial "no config dir found"
+  assert_output --partial "no sources file found"
+  rm -rf "$empty_xdg"
 }
 
 @test "profile: profile not found exits 1 with name in error" {
@@ -157,12 +166,33 @@ teardown() {
   assert_output --partial "work.lua"
 }
 
-@test "profile: hs command includes MAKEIT_CONFIG global set to config dir" {
+@test "profile: hs command includes MAKEIT_CONFIG global set to source dir" {
   touch "$CONF_DIR/work.lua"
 
   run "$MAKEIT" work
   assert_success
   assert_output --partial "MAKEIT_CONFIG=[=[$CONF_DIR]=]"
+}
+
+# ---------------------------------------------------------------------------
+# Multi-source profile resolution
+# ---------------------------------------------------------------------------
+
+@test "profile: resolves from second source in sources file" {
+  local source1=$(mktemp -d)
+  local source2=$(mktemp -d)
+  touch "$source2/work.lua"
+
+  local xdg=$(mktemp -d)
+  mkdir -p "$xdg/makeit"
+  printf '%s\n%s\n' "$source1" "$source2" > "$xdg/makeit/sources"
+
+  XDG_CONFIG_HOME="$xdg" run "$MAKEIT" work
+  assert_success
+  assert_output --partial "dofile"
+  assert_output --partial "$source2/work.lua"
+
+  rm -rf "$source1" "$source2" "$xdg"
 }
 
 # ---------------------------------------------------------------------------

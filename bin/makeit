@@ -5,8 +5,27 @@ set -euo pipefail
 # Config
 # ---------------------------------------------------------------------------
 
-config_dir() {
-  echo "${MAKEIT_CONFIG:-$HOME/.config/makeit}"
+config_home() {
+  echo "${XDG_CONFIG_HOME:-$HOME/.config}/makeit"
+}
+
+sources_file() {
+  echo "$(config_home)/sources"
+}
+
+# Reads the sources file and prints each directory, one per line.
+# Expands ~ to $HOME. Skips blank lines and comments.
+config_dirs() {
+  local sf
+  sf="$(sources_file)"
+  [[ -f "$sf" ]] || return 0
+  while IFS= read -r line || [[ -n "$line" ]]; do
+    line="${line%%#*}"          # strip comments
+    line="${line#"${line%%[! ]*}"}"  # trim leading spaces
+    line="${line%"${line##*[! ]}"}"  # trim trailing spaces
+    [[ -z "$line" ]] && continue
+    echo "${line/#\~/$HOME}"
+  done < "$sf"
 }
 
 # ---------------------------------------------------------------------------
@@ -29,18 +48,42 @@ resolve_file_path() {
   echo "$path"
 }
 
+# Searches sources for <name>.lua; prints the first match.
+# Returns 1 if not found.
 resolve_profile_path() {
   local name="$1"
-  echo "$(config_dir)/$name.lua"
+  local dir
+  while IFS= read -r dir; do
+    if [[ -f "$dir/$name.lua" ]]; then
+      echo "$dir/$name.lua"
+      return 0
+    fi
+  done < <(config_dirs)
+  return 1
 }
 
 # ---------------------------------------------------------------------------
 # Guards
 # ---------------------------------------------------------------------------
 
-require_config_dir() {
-  if [[ ! -d "$(config_dir)" ]]; then
-    echo "makeit: no config dir found. Set \$MAKEIT_CONFIG or run: make init" >&2
+require_sources() {
+  local sf
+  sf="$(sources_file)"
+  if [[ ! -f "$sf" ]]; then
+    echo "makeit: no sources file found at $sf" >&2
+    echo "  Run: makeit init" >&2
+    exit 1
+  fi
+  local has_dir=false
+  local dir
+  while IFS= read -r dir; do
+    if [[ -d "$dir" ]]; then
+      has_dir=true
+      break
+    fi
+  done < <(config_dirs)
+  if [[ "$has_dir" == false ]]; then
+    echo "makeit: no valid source directories found in $sf" >&2
     exit 1
   fi
 }
@@ -69,23 +112,26 @@ require_file() {
 # ---------------------------------------------------------------------------
 
 cmd_list() {
-  require_config_dir
+  require_sources
   shopt -s nullglob
-  local profiles=("$(config_dir)"/*.lua)
-  if [[ ${#profiles[@]} -eq 0 ]]; then
-    echo "makeit: no profiles found in $(config_dir)" >&2
+  local found=false
+  local dir
+  while IFS= read -r dir; do
+    for p in "$dir"/*.lua; do
+      found=true
+      basename "$p" .lua
+    done
+  done < <(config_dirs)
+  if [[ "$found" == false ]]; then
+    echo "makeit: no profiles found in any source directory" >&2
     exit 1
   fi
-  for p in "${profiles[@]}"; do
-    basename "$p" .lua
-  done
 }
 
 cmd_clear() {
   local path
-  path="$(config_dir)/clear.lua"
-  if [[ ! -f "$path" ]]; then
-    echo "makeit: no clear.lua found in $(config_dir)" >&2
+  if ! path="$(resolve_profile_path clear)"; then
+    echo "makeit: no clear.lua found in any source directory" >&2
     exit 1
   fi
   run_profile "$path"
@@ -103,10 +149,9 @@ cmd_file() {
 }
 
 cmd_profile() {
-  require_config_dir
+  require_sources
   local path
-  path="$(resolve_profile_path "$1")"
-  if [[ ! -f "$path" ]]; then
+  if ! path="$(resolve_profile_path "$1")"; then
     echo "makeit: profile not found: $1" >&2
     list_available_profiles
     exit 1
@@ -121,13 +166,17 @@ cmd_profile() {
 # Prints available profiles to stderr. Used when a named profile is not found.
 list_available_profiles() {
   shopt -s nullglob
-  local available=("$(config_dir)"/*.lua)
-  if [[ ${#available[@]} -gt 0 ]]; then
-    echo "available profiles:" >&2
-    for p in "${available[@]}"; do
+  local found=false
+  local dir
+  while IFS= read -r dir; do
+    for p in "$dir"/*.lua; do
+      if [[ "$found" == false ]]; then
+        echo "available profiles:" >&2
+        found=true
+      fi
       echo "  $(basename "$p" .lua)" >&2
     done
-  fi
+  done < <(config_dirs)
 }
 
 # ---------------------------------------------------------------------------
@@ -137,7 +186,7 @@ list_available_profiles() {
 run_profile() {
   local path="$1"
   local dir
-  dir="$(config_dir)"
+  dir="$(dirname "$path")"
   require_hammerspoon
   hs -c "MAKEIT_CONFIG=[=[$dir]=]; dofile([=[$path]=])"
 }

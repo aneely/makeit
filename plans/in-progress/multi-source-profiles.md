@@ -16,27 +16,27 @@ ones without entangling them.
 
 ## Design decisions
 
-- **Search path:** `$MAKEIT_CONFIG` is a colon-separated list of directories (like `PATH`).
-  Arbitrary N sources supported.
-- **Precedence:** first match wins. Place more specific sources earlier in the path.
-- **No auto-prepend:** the engine does not silently add any well-known location. `$MAKEIT_CONFIG`
-  fully describes the search path. Adding a scratchpad dir is explicit.
+- **Sources file:** `~/.config/makeit/sources` lists profile source directories, one per line.
+  The engine reads this file at startup. Arbitrary N sources supported.
+- **Precedence:** first match wins. Place more specific sources earlier in the file.
+- **No env var:** `$MAKEIT_CONFIG` is retired. The sources file is the single source of truth.
+  This keeps complexity inside the tool rather than pushing shell config onto users.
+- **Managed by the tool:** `makeit init` creates or appends to the sources file.
+  `makeit adopt <dir>` registers an existing repo (fast-follow).
 - **`makeit list`:** shows all profiles across all sources, annotated with source path.
   Duplicate names are shown with a `[shadowed]` marker on the losing entry.
+- **MAKEIT_CONFIG Lua global:** when running a profile, the engine injects the source
+  directory that contained the winning profile. This preserves the contract that profiles
+  use `MAKEIT_CONFIG` to find sibling files (e.g. `dofile(MAKEIT_CONFIG .. "/lib/...")`).
 - **Promotion:** user convention only; no `makeit promote` subcommand for now.
-- **Machine identity:** handled by configuring `$MAKEIT_CONFIG` per machine, not by engine logic.
-
-## Notes
-
-- Adoption friction: after `makeit init`, the user still has to wire the new dir into
-  `$MAKEIT_CONFIG` before profiles run. This gap is a fast-follow — likely an `adopt`
-  subcommand or an update to `makeit init` output.
+- **Machine identity:** handled by which sources are listed per machine, not by engine logic.
 
 ## Tasks
 
-- [ ] Establish baseline: run existing BATS tests green before touching anything
-- [ ] Design the search path resolution algorithm and document it in PLAN.md
-- [ ] Extend `bin/makeit` to accept a colon-separated `$MAKEIT_CONFIG`
+- [x] Establish baseline: run existing BATS tests green before touching anything
+- [x] Design the search path resolution algorithm and document it in PLAN.md
+- [ ] Extend `bin/makeit` to read `~/.config/makeit/sources` for profile resolution
 - [ ] Update `makeit list` to show all profiles across all sources with source annotation and shadowing
 - [ ] Update BATS tests to cover multi-source resolution and precedence
+- [ ] Update `makeit init` to create/append to the sources file
 - [ ] Move to `plans/completed/`
