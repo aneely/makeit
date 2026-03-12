@@ -26,8 +26,7 @@ Work is tracked as a kanban across `plans/`:
 
 **Starting a session:** read `AGENTS.md`, `PLAN.md`, and the relevant `plans/in-progress/` file.
 
-**Ending a session ("let's hand off"):** update the in-progress story file's task checklist to reflect current state, then append or update a `## Handoff` section with a ready-to-paste continuation prompt:
-> Read `AGENTS.md`, `PLAN.md`, and `plans/in-progress/<feature>.md`. [One sentence on current state.] Next task: [specific next action].
+**Ending a session ("let's hand off"):** update the in-progress story file's task checklist to reflect current state, then update `plans/HANDOFF.md` with current state and the next action.
 
 When context is getting heavy, "let's hand off" is the cue to exit cleanly before compaction forces it.
 
