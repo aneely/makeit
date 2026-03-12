@@ -31,8 +31,10 @@ init:
 		cp scaffold/config.Makefile $(CONFIG_DIR)/Makefile; \
 		echo "  Created $(CONFIG_DIR)/Makefile"; \
 	fi
-	@if [ "$(CONFIG_DIR)" != "$(DEFAULT_CONFIG_DIR)" ]; then \
-		echo "  Add to your .zshrc: export MAKEIT_CONFIG=$(CONFIG_DIR)"; \
+	@mkdir -p $(HOME)/.config/makeit
+	@if ! grep -qxF '$(CONFIG_DIR)' $(HOME)/.config/makeit/sources 2>/dev/null; then \
+		echo '$(CONFIG_DIR)' >> $(HOME)/.config/makeit/sources; \
+		echo "  Registered $(CONFIG_DIR) in ~/.config/makeit/sources"; \
 	fi
 	@echo "  Done. To version-control your profiles:"
 	@echo "    cd $(CONFIG_DIR) && git init && git add . && git commit -m \"initial profiles\""

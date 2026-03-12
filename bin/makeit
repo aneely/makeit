@@ -115,11 +115,18 @@ cmd_list() {
   require_sources
   shopt -s nullglob
   local found=false
-  local dir
+  local seen=" "
+  local dir name
   while IFS= read -r dir; do
     for p in "$dir"/*.lua; do
       found=true
-      basename "$p" .lua
+      name="$(basename "$p" .lua)"
+      if [[ "$seen" == *" $name "* ]]; then
+        printf "%-20s %s  [shadowed]\n" "$name" "$dir"
+      else
+        printf "%-20s %s\n" "$name" "$dir"
+        seen+="$name "
+      fi
     done
   done < <(config_dirs)
   if [[ "$found" == false ]]; then

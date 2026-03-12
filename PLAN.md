@@ -288,7 +288,7 @@ The engine searches top to bottom; first match wins.
 ### Full config repo setup (when ready)
 9. `make -C ~/dev/makeit init` — scaffolds config dir with a sample profile and passing test
    - Custom location: `make -C ~/dev/makeit init CONFIG_DIR=~/dev/my-profiles`
-   - Then add `export MAKEIT_CONFIG=~/dev/my-profiles` to `.zshrc`
+   - `makeit init` registers the directory in `~/.config/makeit/sources`
 10. `cd <config-dir> && git init && git add . && git commit -m "initial profiles"`
 11. `makeit work`
 
@@ -358,7 +358,7 @@ init:
 
 ## Testing Approach
 
-- **Shell wrapper** (`make test`): BATS tests covering profile dispatch, `list`, `clear`, missing profile error, missing/unconfigured config dir, and the engine contract (that `hs` receives `MAKEIT_CONFIG` as an injected Lua global)
+- **Shell wrapper** (`make test`): BATS tests covering profile dispatch, `list`, `clear`, missing profile error, missing sources file, and the engine contract (that `hs` receives `MAKEIT_CONFIG` as an injected Lua global for the winning source directory)
 - **Smoke tests** (`make smoke`): require a live Hammerspoon instance; verify dependencies are installed (`hs`, Hammerspoon, `lua`) and that `MAKEIT_CONFIG` survives the trip into the daemon. Intended for post-install verification on a new machine, not run by `make test`
 - **Profiles** (`<config-repo>/tests/`): Lua tests using a lightweight `hs` mock — stub the `hs` table, `dofile()` the profile, assert on observed calls. Run with plain `lua`. `make init` scaffolds a passing example test out of the box.
 
@@ -391,4 +391,4 @@ Manual testing is still the final word — a passing test means the profile runs
 
 Note: Hammerspoon is a cask and cannot be declared as a formula dependency. Document as a manual prerequisite.
 
-Config (`$MAKEIT_CONFIG`) is always separate from the install location — works correctly whether installed via `make install` or Homebrew.
+Config (managed via `~/.config/makeit/sources`) is always separate from the install location — works correctly whether installed via `make install` or Homebrew.

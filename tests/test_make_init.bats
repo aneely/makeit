@@ -7,10 +7,12 @@ setup() {
 
   REPO="$BATS_TEST_DIRNAME/.."
   CONFIG_DIR=$(mktemp -d)
+  XDG_HOME=$(mktemp -d)
+  export HOME="$XDG_HOME"
 }
 
 teardown() {
-  rm -rf "$CONFIG_DIR"
+  rm -rf "$CONFIG_DIR" "$XDG_HOME"
 }
 
 # ---------------------------------------------------------------------------
@@ -43,16 +45,22 @@ teardown() {
   assert_output --partial "Then: makeit work"
 }
 
-@test "init: custom CONFIG_DIR prints export reminder" {
+@test "init: registers config dir in sources file" {
   run make -C "$REPO" init CONFIG_DIR="$CONFIG_DIR"
   assert_success
-  assert_output --partial "export MAKEIT_CONFIG=$CONFIG_DIR"
+  assert_output --partial "Registered $CONFIG_DIR"
+  assert_file_exists "$XDG_HOME/.config/makeit/sources"
+  assert grep -qxF "$CONFIG_DIR" "$XDG_HOME/.config/makeit/sources"
 }
 
-@test "init: default CONFIG_DIR does not print export reminder" {
-  run make -C "$REPO" init CONFIG_DIR="$CONFIG_DIR" DEFAULT_CONFIG_DIR="$CONFIG_DIR"
+@test "init: does not duplicate config dir in sources file on second run" {
+  make -C "$REPO" init CONFIG_DIR="$CONFIG_DIR" >/dev/null
+  run make -C "$REPO" init CONFIG_DIR="$CONFIG_DIR"
   assert_success
-  refute_output --partial "export MAKEIT_CONFIG"
+  refute_output --partial "Registered"
+  local count
+  count=$(grep -cxF "$CONFIG_DIR" "$XDG_HOME/.config/makeit/sources")
+  [ "$count" -eq 1 ]
 }
 
 @test "init: does not overwrite existing files on second run" {

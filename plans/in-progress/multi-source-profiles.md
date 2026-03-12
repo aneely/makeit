@@ -35,8 +35,9 @@ ones without entangling them.
 
 - [x] Establish baseline: run existing BATS tests green before touching anything
 - [x] Design the search path resolution algorithm and document it in PLAN.md
-- [ ] Extend `bin/makeit` to read `~/.config/makeit/sources` for profile resolution
-- [ ] Update `makeit list` to show all profiles across all sources with source annotation and shadowing
-- [ ] Update BATS tests to cover multi-source resolution and precedence
+- [x] Extend `bin/makeit` to read `~/.config/makeit/sources` for profile resolution
+- [x] Update `makeit list` to show all profiles across all sources with source annotation and shadowing
+- [x] Update BATS tests to cover multi-source resolution and precedence
 - [ ] Update `makeit init` to create/append to the sources file
+- [ ] Add `makeit remove <dir>` to unregister a source from the sources file
 - [ ] Move to `plans/completed/`

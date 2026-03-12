@@ -62,6 +62,27 @@ teardown() {
   refute_output --partial ".lua"
 }
 
+@test "list: shows profiles with source annotation and shadowed marker" {
+  local source1=$(mktemp -d)
+  local source2=$(mktemp -d)
+  touch "$source1/work.lua" "$source1/morning.lua"
+  touch "$source2/work.lua" "$source2/hello.lua"
+
+  local xdg=$(mktemp -d)
+  mkdir -p "$xdg/makeit"
+  printf '%s\n%s\n' "$source1" "$source2" > "$xdg/makeit/sources"
+
+  XDG_CONFIG_HOME="$xdg" run "$MAKEIT" list
+  assert_success
+  assert_output --partial "$source1"
+  assert_output --partial "$source2"
+  # Winner is not shadowed; loser is
+  assert_line --regexp "work[[:space:]]+${source1}$"
+  assert_line --regexp "work[[:space:]]+${source2}.*\[shadowed\]"
+
+  rm -rf "$source1" "$source2" "$xdg"
+}
+
 # ---------------------------------------------------------------------------
 # makeit clear
 # ---------------------------------------------------------------------------
