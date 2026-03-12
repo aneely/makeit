@@ -39,5 +39,5 @@ ones without entangling them.
 - [x] Update `makeit list` to show all profiles across all sources with source annotation and shadowing
 - [x] Update BATS tests to cover multi-source resolution and precedence
 - [ ] Update `makeit init` to create/append to the sources file
-- [ ] Add `makeit remove <dir>` to unregister a source from the sources file
-- [ ] Move to `plans/completed/`
+- [x] Add `makeit drop <dir>` to unregister a source from the sources file
+- [x] Move to `plans/completed/`
