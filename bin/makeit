@@ -166,6 +166,18 @@ cmd_profile() {
   run_profile "$path"
 }
 
+cmd_drop() {
+  local dir="$1"
+  local sf
+  sf="$(sources_file)"
+  if [[ ! -f "$sf" ]] || ! grep -qxF "$dir" "$sf"; then
+    echo "makeit: $dir is not listed in $sf" >&2
+    exit 1
+  fi
+  grep -vxF "$dir" "$sf" > "$sf.tmp" && mv "$sf.tmp" "$sf"
+  echo "Dropped $dir from $sf"
+}
+
 # ---------------------------------------------------------------------------
 # Helpers
 # ---------------------------------------------------------------------------
@@ -207,6 +219,7 @@ usage() {
   echo "       makeit <file.lua>   run any .lua file directly" >&2
   echo "       makeit list         list available profiles" >&2
   echo "       makeit clear        run clear.lua from config dir" >&2
+  echo "       makeit drop <dir>   unregister a source directory" >&2
   exit 1
 }
 
@@ -221,6 +234,7 @@ main() {
   case "$cmd" in
     list)  cmd_list ;;
     clear) cmd_clear ;;
+    drop)  cmd_drop "${2:-}" ;;
     *)
       if is_file_path "$cmd"; then
         cmd_file "$cmd"

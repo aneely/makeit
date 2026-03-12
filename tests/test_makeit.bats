@@ -217,6 +217,32 @@ teardown() {
 }
 
 # ---------------------------------------------------------------------------
+# makeit drop
+# ---------------------------------------------------------------------------
+
+@test "drop: removes source from sources file" {
+  local source1=$(mktemp -d)
+  local source2=$(mktemp -d)
+
+  local xdg=$(mktemp -d)
+  mkdir -p "$xdg/makeit"
+  printf '%s\n%s\n' "$source1" "$source2" > "$xdg/makeit/sources"
+
+  XDG_CONFIG_HOME="$xdg" run "$MAKEIT" drop "$source2"
+  assert_success
+  assert grep -qxF "$source1" "$xdg/makeit/sources"
+  refute grep -qxF "$source2" "$xdg/makeit/sources"
+
+  rm -rf "$source1" "$source2" "$xdg"
+}
+
+@test "drop: exits 1 if source not listed" {
+  XDG_CONFIG_HOME="$XDG_DIR" run "$MAKEIT" drop "/tmp/not-a-source"
+  assert_failure
+  assert_output --partial "not listed"
+}
+
+# ---------------------------------------------------------------------------
 # Preflight dependency checks
 # ---------------------------------------------------------------------------
 
